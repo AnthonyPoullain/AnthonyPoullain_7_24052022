@@ -1,4 +1,3 @@
-// eslint-disable-next-line no-unused-vars
 const recipes = [
   {
     id: 1,
@@ -1776,52 +1775,3 @@ const recipes = [
     ustensils: ['rouleau à patisserie', 'fouet'],
   },
 ];
-
-// DOM Elements
-const recipeCardTemplate = document.querySelector(
-  '[data-recipe-card-template]'
-);
-const cards = document.querySelector('[data-cards]');
-const searchInput = document.querySelector('[data-search]');
-
-let displayedCards = [];
-
-// Listen for search
-searchInput.addEventListener('input', (e) => {
-  const value = e.target.value.toLowerCase();
-  displayedCards.forEach((card) => {
-    const isVisible = card.title.toLowerCase().includes(value);
-    card.element.classList.toggle('hide', !isVisible);
-  });
-});
-
-// Generate cards
-displayedCards = recipes.map((recipe) => {
-  // DOM Elements
-  const card = recipeCardTemplate.content.cloneNode(true).children[0];
-  const title = card.querySelector('[data-title]');
-  const time = card.querySelector('[data-time]');
-  const ingredients = card.querySelector('[data-ingredients]');
-  const description = card.querySelector('[data-description]');
-
-  // Display data
-  title.textContent = recipe.name;
-  time.textContent = `${recipe.time} min`;
-  ingredients.innerHTML = recipe.ingredients
-    .map(
-      (item) =>
-        `<li><span>${item.ingredient} ${
-          Object.keys(item).length > 1 ? ':' : ''
-        }</span> ${item.quantity ? item.quantity : ''} ${
-          item.unit ? item.unit : ''
-        }</li>`
-    )
-    .join('');
-  description.textContent = recipe.description;
-
-  // Append cards
-  cards.appendChild(card);
-
-  // Return data used for handling search
-  return { title: recipe.name, element: card };
-});
