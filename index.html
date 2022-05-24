@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <title>Les petits plats</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link href="css/style.css" rel="stylesheet" />
+    <script
+      src="https://kit.fontawesome.com/8337497683.js"
+      crossorigin="anonymous"
+    ></script>
+    <script src="scripts/recipes.js" defer></script>
+  </head>
+  <body>
+    <header class="header container">
+      <a href="index.html">
+        <img
+          src="assets/images/logo.svg"
+          alt="Homepage Logo"
+          class="header__logo"
+        />
+      </a>
+    </header>
+    <main class="container">
+      <div class="search">
+        <div class="search__bar-wrapper">
+          <input
+            type="search"
+            placeholder="Rechercher une recette..."
+            class="search__bar"
+            data-search
+          />
+          <i class="fa-solid fa-magnifying-glass"></i>
+        </div>
+        <div class="search__tags"></div>
+        <div class="search__buttons">
+          <button class="btn btn-blue">
+            <span class="btn__text">Ingredients</span
+            ><i class="fa-solid fa-angle-up"></i>
+          </button>
+          <button class="btn btn-green">
+            <span class="btn__text">Appareils</span
+            ><i class="fa-solid fa-angle-up"></i>
+          </button>
+          <button class="btn btn-orange">
+            <span class="btn__text">Ustensiles</span
+            ><i class="fa-solid fa-angle-up"></i>
+          </button>
+        </div>
+      </div>
+      <section class="cards" data-cards></section>
+    </main>
+    <template data-recipe-card-template>
+      <article class="card">
+        <div class="card__header"></div>
+        <div class="card__body">
+          <div class="card__heading">
+            <h3 class="card__title" data-title></h3>
+            <span class="card__time"
+              ><i class="fa-regular fa-clock"></i><span data-time></span
+            ></span>
+          </div>
+          <div class="card__description">
+            <ul class="card__ingredients" data-ingredients></ul>
+            <div class="card__preview-text" data-description>
+              <p></p>
+            </div>
+          </div>
+        </div>
+      </article>
+    </template>
+  </body>
+</html>
