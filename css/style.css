@@ -33,7 +33,7 @@ input[type='search']::-webkit-search-results-decoration {
 
 /* Utility */
 .container {
-  max-width: 1240px;
+  max-width: calc(1240px + 10%);
   margin: 0 auto;
   padding: 0 5%;
 }
@@ -81,6 +81,11 @@ input[type='search']::-webkit-search-results-decoration {
   font-family: inherit;
 }
 
+.search__bar:active,
+.search__bar:focus {
+  /* outline: 2px var(--orange-400) solid; */
+}
+
 .search__buttons {
   display: flex;
   margin-bottom: 10px;
@@ -100,8 +105,29 @@ input[type='search']::-webkit-search-results-decoration {
   justify-content: space-between;
 }
 
-.btn:hover {
-  opacity: 0.8;
+.btn-container {
+  position: relative;
+}
+
+.btn-container::after {
+  font-family: 'Font Awesome 5 Free';
+  color: white;
+  content: '\f106';
+  font-size: 18px;
+  font-weight: 700;
+  position: absolute;
+  right: 15px;
+  top: 40%;
+  z-index: 100;
+}
+
+.btn::placeholder {
+  color: #fff;
+}
+
+.btn:active::placeholder,
+.btn:focus::placeholder {
+  color: rgba(255, 255, 255, 0.5);
 }
 
 .btn:first-child {
@@ -169,6 +195,7 @@ input[type='search']::-webkit-search-results-decoration {
 }
 
 .card__title {
+  font-size: 18px;
   font-weight: 400;
   width: 70%;
   overflow: hidden;

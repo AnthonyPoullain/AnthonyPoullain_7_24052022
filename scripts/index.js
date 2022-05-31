@@ -3,10 +3,28 @@
 // By default, main search bar only matches recipe names
 // Set below values to true to broaden the search
 const SEARCH_INCLUDES = {
-  description: false,
+  description: true,
   ingredients: false,
   ustensils: false,
 };
+
+// Words that don't affect search
+const BLACKLIST = [
+  'de',
+  'des',
+  'à',
+  'au',
+  'aux',
+  'un',
+  'une',
+  'le',
+  'la',
+  'avec',
+  'son',
+  'sa',
+  'ce',
+  'ces',
+];
 
 const DOMHandler = {
   generateCardsHTML: (recipesData) => {
@@ -21,7 +39,6 @@ const DOMHandler = {
       const ingredients = card.querySelector('[data-ingredients]');
       const description = card.querySelector('[data-description]');
 
-      // Display recipe
       title.textContent = recipe.name;
       time.textContent = `${recipe.time} min`;
       ingredients.innerHTML = recipe.ingredients
@@ -50,30 +67,53 @@ const DOMHandler = {
 };
 
 const SearchHandler = {
-  filterResults: (input) => {
-    const filteredRecipes = recipes.filter((recipe) => {
-      const criterias = [recipe.name];
+  sanitize: (input) => {
+    return input.toLowerCase().replace(/\s+/g, ' ').replace('.', '').trim();
+  },
+
+  filterResults: (stack, needle) => {
+    const filteredRecipes = stack.filter((recipe) => {
+      const sanitizedNeedle = SearchHandler.sanitize(needle);
+      if (BLACKLIST.includes(sanitizedNeedle)) return false;
+
+      let criterias = [recipe.name];
       if (SEARCH_INCLUDES.ingredients) criterias.push(recipe.ingredients);
       if (SEARCH_INCLUDES.ustensils) criterias.push(recipe.ustensils);
       if (SEARCH_INCLUDES.description) criterias.push(recipe.description);
-      return criterias.toString().toLowerCase().includes(input.toLowerCase());
+      criterias = criterias.toString().trim().toLowerCase();
+
+      return criterias.includes(sanitizedNeedle);
     });
     return filteredRecipes;
   },
 };
 
+function getRecipes() {
+  return recipes;
+}
+
 function init() {
   // Display cards
-  const cardElements = DOMHandler.generateCardsHTML(recipes);
+  const cardElements = DOMHandler.generateCardsHTML(getRecipes());
   DOMHandler.displayCards(cardElements);
 
   // Listen for search
   const searchInput = document.querySelector('[data-search]');
   searchInput.addEventListener('input', (e) => {
-    const value = e.target.value.toLowerCase();
-    DOMHandler.displayCards(
-      DOMHandler.generateCardsHTML(SearchHandler.filterResults(value))
-    );
+    const { value } = e.target;
+
+    if (value && value.length > 0) {
+      let data = getRecipes();
+      value.split(' ').forEach((word) => {
+        if (BLACKLIST.includes(word)) return;
+        const filteredData = SearchHandler.filterResults(data, word);
+        const filteredCardElements = DOMHandler.generateCardsHTML(filteredData);
+        DOMHandler.displayCards(filteredCardElements);
+        data = filteredData;
+      });
+    } else {
+      DOMHandler.displayCards(cardElements);
+    }
   });
 }
 
