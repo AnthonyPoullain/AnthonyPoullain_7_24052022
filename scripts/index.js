@@ -8,7 +8,6 @@ const SEARCH_INCLUDES = {
   ustensils: false,
 };
 
-// Words that don't affect search
 const BLACKLIST = [
   'de',
   'des',
@@ -57,12 +56,23 @@ const DOMHandler = {
     return cardElements;
   },
 
+  generateDropdownItems: (items) => {
+    const itemElements = items.map(
+      (item) => `<li role="button" tabindex="0">${item}</li>`
+    );
+    return itemElements;
+  },
+
   displayCards: (cards) => {
     const cardSection = document.querySelector('[data-cards]');
     cardSection.innerHTML = '';
     cards.forEach((card) => {
       cardSection.appendChild(card);
     });
+  },
+
+  displayDropdownItems: (items, dropdownEl) => {
+    items.forEach((item) => dropdownEl.insertAdjacentHTML('beforeend', item));
   },
 };
 
@@ -92,10 +102,61 @@ function getRecipes() {
   return recipes;
 }
 
+function getIngredients(data) {
+  const ingredientList = [];
+  data.forEach((recipe) => {
+    recipe.ingredients.forEach((ingredient) => {
+      if (!ingredientList.includes(ingredient.ingredient)) {
+        ingredientList.push(ingredient.ingredient);
+      }
+    });
+  });
+  return ingredientList;
+}
+
+function getAppliances(data) {
+  const applianceList = [...new Set(data.map((item) => item.appliance))];
+  applianceList.forEach((item) => item);
+  return applianceList;
+}
+
+function getUstensils(data) {
+  const ustensilsList = [];
+  data.forEach((recipe) => {
+    recipe.ustensils.forEach((ustensil) => {
+      ustensilsList.push(ustensil);
+    });
+  });
+  return [...new Set(ustensilsList)];
+}
+
 function init() {
+  let data = getRecipes();
+
   // Display cards
-  const cardElements = DOMHandler.generateCardsHTML(getRecipes());
+  const cardElements = DOMHandler.generateCardsHTML(data);
   DOMHandler.displayCards(cardElements);
+
+  const ingredientsDropdown = document.querySelector(
+    '.btn--blue .dropdown-list'
+  );
+  const ingredients = getIngredients(data);
+  const ingredientsElements = DOMHandler.generateDropdownItems(ingredients);
+  DOMHandler.displayDropdownItems(ingredientsElements, ingredientsDropdown);
+
+  const appliancesDropdown = document.querySelector(
+    '.btn--green .dropdown-list'
+  );
+  const appliances = getAppliances(data);
+  const appliancesElements = DOMHandler.generateDropdownItems(appliances);
+  DOMHandler.displayDropdownItems(appliancesElements, appliancesDropdown);
+
+  const ustensilsDropdown = document.querySelector(
+    '.btn--orange .dropdown-list'
+  );
+  const ustensils = getUstensils(data);
+  const ustensilsElements = DOMHandler.generateDropdownItems(ustensils);
+  DOMHandler.displayDropdownItems(ustensilsElements, ustensilsDropdown);
 
   // Listen for search
   const searchInput = document.querySelector('[data-search]');
@@ -103,7 +164,6 @@ function init() {
     const { value } = e.target;
 
     if (value && value.length > 0) {
-      let data = getRecipes();
       value.split(' ').forEach((word) => {
         if (BLACKLIST.includes(word)) return;
         const filteredData = SearchHandler.filterResults(data, word);

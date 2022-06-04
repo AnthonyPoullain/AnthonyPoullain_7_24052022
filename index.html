@@ -11,6 +11,7 @@
     ></script>
     <script src="scripts/recipes.js"></script>
     <script src="scripts/index.js" defer></script>
+    <script src="scripts/tags.js" defer></script>
   </head>
   <body>
     <header class="header container">
@@ -35,20 +36,59 @@
         </div>
         <div class="search__tags"></div>
         <div class="search__buttons">
-					<div class="btn-container">
-          <input type="search" placeholder="Ingredients" class="btn btn-blue">
-					</div>
-            <!-- <span class="btn__text">Ingredients</span -->
-            <!-- ><i class="fa-solid fa-angle-up"></i> -->
-          </input>
-          <button class="btn btn-green">
-            <span class="btn__text">Appareils</span
-            ><i class="fa-solid fa-angle-up"></i>
-          </button>
-          <button class="btn btn-orange">
-            <span class="btn__text">Ustensiles</span
-            ><i class="fa-solid fa-angle-up"></i>
-          </button>
+          <div class="dropdown">
+            <button class="dropbtn btn btn--blue">
+              Ingredients
+              <i class="fa-solid fa-angle-up"></i>
+            </button>
+            <div class="dropdown-content btn--blue">
+              <ul class="dropdown-list">
+                <input
+                  type="search"
+                  class="dropdown__input"
+                  placeholder="Rechercher un ingrédient..."
+                  onkeyup="filterFunction()"
+                />
+                <i class="fa-solid fa-angle-down"></i>
+              </ul>
+            </div>
+          </div>
+
+          <div class="dropdown">
+            <button class="dropbtn btn btn--green">
+              Appareils
+              <i class="fa-solid fa-angle-up"></i>
+            </button>
+            <div class="dropdown-content btn--green">
+              <ul class="dropdown-list">
+                <input
+                  type="search"
+                  class="dropdown__input"
+                  placeholder="Rechercher un appareil..."
+                  onkeyup="filterFunction()"
+                />
+                <i class="fa-solid fa-angle-down"></i>
+              </ul>
+            </div>
+          </div>
+
+          <div class="dropdown">
+            <button class="dropbtn btn btn--orange">
+              Ustensiles
+              <i class="fa-solid fa-angle-up"></i>
+            </button>
+            <div class="dropdown-content btn--orange">
+              <ul class="dropdown-list">
+                <input
+                  type="search"
+                  class="dropdown__input"
+                  placeholder="Rechercher un ustensile..."
+                  onkeyup="filterFunction()"
+                />
+                <i class="fa-solid fa-angle-down"></i>
+              </ul>
+            </div>
+          </div>
         </div>
       </div>
       <section class="cards" data-cards></section>
