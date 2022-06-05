@@ -57,7 +57,7 @@ const DOMHandler = {
   },
 
   generateDropdownItems: (items) => {
-    const itemElements = items.map((item) => `<li  tabindex="0">${item}</li>`);
+    const itemElements = items.map((item) => `<p tabindex="0">${item}</li>`);
     return itemElements;
   },
 
@@ -142,23 +142,17 @@ function init() {
   DOMHandler.displayCards(cardElements);
 
   // Generate dropdown list items
-  const ingredientsDropdown = document.querySelector(
-    '.btn--blue .dropdown-list'
-  );
+  const ingredientsDropdown = document.querySelectorAll('[data-list]')[0];
   const ingredients = getIngredients(data);
   const ingredientsElements = DOMHandler.generateDropdownItems(ingredients);
   DOMHandler.displayDropdownItems(ingredientsElements, ingredientsDropdown);
 
-  const appliancesDropdown = document.querySelector(
-    '.btn--green .dropdown-list'
-  );
+  const appliancesDropdown = document.querySelectorAll('[data-list]')[1];
   const appliances = getAppliances(data);
   const appliancesElements = DOMHandler.generateDropdownItems(appliances);
   DOMHandler.displayDropdownItems(appliancesElements, appliancesDropdown);
 
-  const ustensilsDropdown = document.querySelector(
-    '.btn--orange .dropdown-list'
-  );
+  const ustensilsDropdown = document.querySelectorAll('[data-list]')[2];
   const ustensils = getUstensils(data);
   const ustensilsElements = DOMHandler.generateDropdownItems(ustensils);
   DOMHandler.displayDropdownItems(ustensilsElements, ustensilsDropdown);

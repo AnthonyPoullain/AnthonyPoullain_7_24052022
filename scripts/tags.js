@@ -1,18 +1,17 @@
-const dropdowns = document.querySelectorAll('.dropdown');
-// const myInput = document.querySelector('#myInput');
+const dropdowns = document.querySelectorAll('[data-dropdown]');
 
 function openDropdown(dropdownElement) {
   dropdowns.forEach((d) => {
-    d.querySelector('.dropdown-content').classList.remove('show');
-    d.querySelector('.dropbtn').classList.remove('hide');
+    d.querySelector('[data-content]').classList.remove('show');
+    d.querySelector('button').classList.remove('hide');
   });
-  dropdownElement.querySelector('.dropdown-content').classList.add('show');
-  dropdownElement.querySelector('.dropbtn').classList.add('hide');
+  dropdownElement.querySelector('[data-content]').classList.add('show');
+  dropdownElement.querySelector('button').classList.add('hide');
 }
 
 function closeDropdown(dropdownElement) {
-  dropdownElement.querySelector('.dropdown-content').classList.remove('show');
-  dropdownElement.querySelector('.dropbtn').classList.remove('hide');
+  dropdownElement.querySelector('[data-content]').classList.remove('show');
+  dropdownElement.querySelector('button').classList.remove('hide');
 }
 
 ['click', 'keydown'].forEach((evtType) => {
@@ -41,18 +40,3 @@ dropdowns.forEach((dropdown) => {
     });
   });
 });
-
-function filterFunction() {
-  const input = document.getElementById('myInput');
-  const filter = input.value.toUpperCase();
-  const div = document.getElementById('myDropdown');
-  const li = div.getElementsByTagName('li');
-  for (let i = 0; i < li.length; i += 1) {
-    const txtValue = li[i].textContent || li[i].innerText;
-    if (txtValue.toUpperCase().indexOf(filter) > -1) {
-      li[i].style.display = '';
-    } else {
-      li[i].style.display = 'none';
-    }
-  }
-}

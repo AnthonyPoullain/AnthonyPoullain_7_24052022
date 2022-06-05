@@ -36,57 +36,54 @@
         </div>
         <div class="search__tags"></div>
         <div class="search__buttons">
-          <div class="dropdown">
-            <button class="dropbtn btn btn--blue">
+          <div class="dropdown" data-dropdown>
+            <button class="btn btn--blue">
               Ingredients
               <i class="fa-solid fa-angle-up"></i>
             </button>
-            <div class="dropdown-content btn--blue">
-              <ul class="dropdown-list">
+            <div class="dropdown__content btn--blue" data-content>
+              <div class="dropdown__list" data-list>
                 <input
                   type="search"
                   class="dropdown__input"
                   placeholder="Rechercher un ingrédient..."
-                  onkeyup="filterFunction()"
                 />
                 <i class="fa-solid fa-angle-down"></i>
-              </ul>
+              </div>
             </div>
           </div>
 
-          <div class="dropdown">
-            <button class="dropbtn btn btn--green">
+          <div class="dropdown" data-dropdown>
+            <button class="btn btn--green">
               Appareils
               <i class="fa-solid fa-angle-up"></i>
             </button>
-            <div class="dropdown-content btn--green">
-              <ul class="dropdown-list">
+            <div class="dropdown__content btn--green" data-content>
+              <div class="dropdown__list" data-list>
                 <input
                   type="search"
                   class="dropdown__input"
                   placeholder="Rechercher un appareil..."
-                  onkeyup="filterFunction()"
                 />
                 <i class="fa-solid fa-angle-down"></i>
-              </ul>
+              </div>
             </div>
           </div>
 
-          <div class="dropdown">
-            <button class="dropbtn btn btn--orange">
+          <div class="dropdown" data-dropdown>
+            <button class="btn btn--orange">
               Ustensiles
               <i class="fa-solid fa-angle-up"></i>
             </button>
-            <div class="dropdown-content btn--orange">
-              <ul class="dropdown-list">
+            <div class="dropdown__content btn--orange" data-content>
+              <div class="dropdown__list" data-list>
                 <input
                   type="search"
                   class="dropdown__input"
                   placeholder="Rechercher un ustensile..."
-                  onkeyup="filterFunction()"
                 />
                 <i class="fa-solid fa-angle-down"></i>
-              </ul>
+              </div>
             </div>
           </div>
         </div>
@@ -98,7 +95,9 @@
         <div class="card__header"></div>
         <div class="card__body">
           <div class="card__heading">
-            <h3 class="card__title" data-title></h3>
+            <h3 class="card__title">
+              <a href="" data-title></a>
+            </h3>
             <span class="card__time"
               ><i class="fa-regular fa-clock"></i><span data-time></span
             ></span>
