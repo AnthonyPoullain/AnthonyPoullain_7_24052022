@@ -3,7 +3,7 @@
 // By default, main search bar only matches recipe names
 // Set below values to true to broaden the search
 const SEARCH_INCLUDES = {
-  description: true,
+  description: false,
   ingredients: false,
   ustensils: false,
 };
@@ -98,6 +98,11 @@ const SearchHandler = {
   },
 };
 
+function normalizeString(str) {
+  const capitalizedStr = str.charAt(0).toUpperCase() + str.slice(1);
+  return capitalizedStr.replace(/\([^)]*\)/, '');
+}
+
 function getRecipes() {
   return recipes;
 }
@@ -106,8 +111,8 @@ function getIngredients(data) {
   const ingredientList = [];
   data.forEach((recipe) => {
     recipe.ingredients.forEach((ingredient) => {
-      if (!ingredientList.includes(ingredient.ingredient)) {
-        ingredientList.push(ingredient.ingredient);
+      if (!ingredientList.includes(normalizeString(ingredient.ingredient))) {
+        ingredientList.push(normalizeString(ingredient.ingredient));
       }
     });
   });
@@ -115,8 +120,9 @@ function getIngredients(data) {
 }
 
 function getAppliances(data) {
-  const applianceList = [...new Set(data.map((item) => item.appliance))];
-  applianceList.forEach((item) => item);
+  const applianceList = [
+    ...new Set(data.map((item) => normalizeString(item.appliance))),
+  ];
   return applianceList;
 }
 
@@ -124,7 +130,7 @@ function getUstensils(data) {
   const ustensilsList = [];
   data.forEach((recipe) => {
     recipe.ustensils.forEach((ustensil) => {
-      ustensilsList.push(ustensil);
+      ustensilsList.push(normalizeString(ustensil));
     });
   });
   return [...new Set(ustensilsList)];
@@ -137,6 +143,7 @@ function init() {
   const cardElements = DOMHandler.generateCardsHTML(data);
   DOMHandler.displayCards(cardElements);
 
+  // Generate dropdown list items
   const ingredientsDropdown = document.querySelector(
     '.btn--blue .dropdown-list'
   );

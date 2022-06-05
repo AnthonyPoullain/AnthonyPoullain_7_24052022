@@ -1,5 +1,5 @@
 const dropdowns = document.querySelectorAll('.dropdown');
-const myInput = document.querySelector('#myInput');
+// const myInput = document.querySelector('#myInput');
 
 ['click', 'keydown'].forEach((evtType) => {
   document.addEventListener(evtType, (e) => {
