@@ -57,9 +57,7 @@ const DOMHandler = {
   },
 
   generateDropdownItems: (items) => {
-    const itemElements = items.map(
-      (item) => `<li role="button" tabindex="0">${item}</li>`
-    );
+    const itemElements = items.map((item) => `<li  tabindex="0">${item}</li>`);
     return itemElements;
   },
 

@@ -1,26 +1,27 @@
 const dropdowns = document.querySelectorAll('.dropdown');
 // const myInput = document.querySelector('#myInput');
 
-['click', 'keydown'].forEach((evtType) => {
-  document.addEventListener(evtType, (e) => {
-    if (e.type === 'click' || e.code === 'Escape') {
-      dropdowns.forEach((d) =>
-        d.querySelector('.dropdown-content').classList.remove('show')
-      );
-    }
-  });
-});
-
 function openDropdown(dropdownElement) {
-  dropdowns.forEach((d) =>
-    d.querySelector('.dropdown-content').classList.remove('show')
-  );
+  dropdowns.forEach((d) => {
+    d.querySelector('.dropdown-content').classList.remove('show');
+    d.querySelector('.dropbtn').classList.remove('hide');
+  });
   dropdownElement.querySelector('.dropdown-content').classList.add('show');
+  dropdownElement.querySelector('.dropbtn').classList.add('hide');
 }
 
 function closeDropdown(dropdownElement) {
   dropdownElement.querySelector('.dropdown-content').classList.remove('show');
+  dropdownElement.querySelector('.dropbtn').classList.remove('hide');
 }
+
+['click', 'keydown'].forEach((evtType) => {
+  document.addEventListener(evtType, (e) => {
+    if (e.type === 'click' || e.code === 'Escape') {
+      dropdowns.forEach((d) => closeDropdown(d));
+    }
+  });
+});
 
 dropdowns.forEach((dropdown) => {
   const btn = dropdown.querySelector('button');

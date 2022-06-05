@@ -45,7 +45,7 @@ input[type='search']::-webkit-search-results-decoration {
 }
 
 .hide {
-  display: none;
+  display: none !important;
 }
 
 /* Header */
@@ -123,18 +123,6 @@ input[type='search']::-webkit-search-results-decoration {
 
 .btn--orange {
   background-color: var(--orange-400);
-}
-
-@media screen and (max-width: 576px) {
-  .search__buttons {
-    flex-direction: column;
-    display: flex;
-    margin-bottom: 25px;
-  }
-  .btn {
-    width: 100%;
-    margin: 15px 0 0 0;
-  }
 }
 
 /* cards */
@@ -227,7 +215,7 @@ input[type='search']::-webkit-search-results-decoration {
   border: none;
   outline: none;
   display: block;
-  width: 100%;
+  width: 90%;
   grid-column: 1 / span 3;
 }
 
@@ -240,12 +228,13 @@ input[type='search']::-webkit-search-results-decoration {
 .dropdown {
   position: relative;
   display: inline-block;
+  height: 102px;
 }
 
 .dropdown i:nth-child(2) {
   position: absolute;
-  top: 25px;
-  right: 15px;
+  top: 40px;
+  right: 25px;
   color: #fff;
   cursor: pointer;
 }
@@ -253,15 +242,11 @@ input[type='search']::-webkit-search-results-decoration {
 /* Dropdown Content (Hidden by Default) */
 .dropdown-content {
   display: none;
-  position: absolute;
-  top: 15px;
-  left: 0;
+  margin: 15px 10px 15px 0px;
   min-width: 170px;
   width: fit-content;
   max-height: 335px;
   border: 1px solid #ddd;
-  z-index: 1;
-  /* padding: 25px 15px; */
   font-family: inherit;
   font-size: 18px;
   border: none;
@@ -277,7 +262,7 @@ input[type='search']::-webkit-search-results-decoration {
   margin-right: 20px;
   text-decoration: none;
   display: block;
-  width: 200px;
+  width: 160px;
   cursor: pointer;
   white-space: nowrap;
 }
@@ -287,12 +272,32 @@ input[type='search']::-webkit-search-results-decoration {
   grid-template-columns: repeat(3, 1fr);
 }
 
-/* Change color of dropdown links on hover */
-.dropdown-content li:hover {
-  /* background-color: blue; */
-}
-
-/* Show the dropdown menu (use JS to add this class to the .dropdown-content container when the user clicks on the dropdown button) */
 .show {
   display: block;
+}
+
+@media screen and (max-width: 1024px) {
+  .dropdown-list {
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+@media screen and (max-width: 576px) {
+  .search__buttons {
+    flex-direction: column;
+    display: flex;
+    margin-bottom: 25px;
+  }
+  .btn {
+    width: 100%;
+    margin: 15px 0 0 0;
+  }
+
+  .dropdown-content {
+    width: 100%;
+  }
+  .dropdown-list {
+    width: 100%;
+  }
 }
