@@ -69,7 +69,7 @@ input[type='search']::-webkit-search-results-decoration {
 /* Search */
 .search__bar-wrapper {
   position: relative;
-  margin-bottom: 10px;
+  margin-bottom: 20px;
 }
 
 .search__bar-wrapper i {
@@ -94,7 +94,35 @@ input[type='search']::-webkit-search-results-decoration {
 
 .search__buttons {
   display: flex;
-  margin-bottom: 10px;
+}
+
+/* Tags */
+.search__tags {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.tag {
+  padding: 10px 20px;
+  margin: 0 10px 5px 0;
+  max-width: fit-content;
+  color: #fff;
+  font-size: 14px;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+}
+
+.tag__close {
+  margin-left: 10px;
+  font-size: 18px;
+  color: inherit;
+  background: none;
+  border: none;
+  outline: none;
+  line-height: 0;
+  cursor: pointer;
 }
 
 .btn {
@@ -128,6 +156,79 @@ input[type='search']::-webkit-search-results-decoration {
 
 .btn--orange {
   background-color: var(--orange-400);
+}
+
+/* The search field */
+.dropdown__input {
+  box-sizing: border-box;
+  background-color: transparent;
+  font-size: 18px;
+  padding: 25px 15px;
+  color: #fff;
+  border: none;
+  outline: none;
+  display: block;
+  width: 90%;
+  grid-column: 1 / span 3;
+}
+
+.dropdown__input::placeholder {
+  font-size: 18px;
+  color: rgb(255, 255, 255, 0.5);
+}
+
+/* The container <div> - needed to position the dropdown content */
+.dropdown {
+  position: relative;
+  display: block;
+  height: 102px;
+}
+
+.dropdown i:nth-child(2) {
+  position: absolute;
+  top: 25px;
+  right: 15px;
+  color: #fff;
+  cursor: pointer;
+}
+
+/* Dropdown Content (Hidden by Default) */
+.dropdown__content {
+  display: none;
+  margin: 15px 10px 15px 0px;
+  min-width: 170px;
+  width: fit-content;
+  max-height: 335px;
+  border: 1px solid #ddd;
+  font-family: inherit;
+  font-size: 18px;
+  border: none;
+  border-radius: 5px;
+  padding-bottom: 15px;
+  overflow: hidden;
+  z-index: 1000;
+  position: relative;
+}
+
+/* Links inside the dropdown */
+.dropdown__content p {
+  color: #fff;
+  padding: 5px 16px;
+  margin-right: 20px;
+  text-decoration: none;
+  display: block;
+  width: 160px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.dropdown__list {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.show {
+  display: block;
 }
 
 /* cards */
@@ -208,79 +309,6 @@ input[type='search']::-webkit-search-results-decoration {
   -webkit-box-orient: vertical;
   overflow: hidden;
   height: 103px;
-}
-
-/* The search field */
-.dropdown__input {
-  box-sizing: border-box;
-  background-color: transparent;
-  font-size: 18px;
-  padding: 25px 15px;
-  color: #fff;
-  border: none;
-  outline: none;
-  display: block;
-  width: 90%;
-  grid-column: 1 / span 3;
-}
-
-.dropdown__input::placeholder {
-  font-size: 18px;
-  color: rgb(255, 255, 255, 0.5);
-}
-
-/* The container <div> - needed to position the dropdown content */
-.dropdown {
-  position: relative;
-  display: block;
-  height: 102px;
-}
-
-.dropdown i:nth-child(2) {
-  position: absolute;
-  top: 25px;
-  right: 15px;
-  color: #fff;
-  cursor: pointer;
-}
-
-/* Dropdown Content (Hidden by Default) */
-.dropdown__content {
-  display: none;
-  margin: 15px 10px 15px 0px;
-  min-width: 170px;
-  width: fit-content;
-  max-height: 335px;
-  border: 1px solid #ddd;
-  font-family: inherit;
-  font-size: 18px;
-  border: none;
-  border-radius: 5px;
-  padding-bottom: 15px;
-  overflow: hidden;
-  z-index: 1000;
-  position: relative;
-}
-
-/* Links inside the dropdown */
-.dropdown__content p {
-  color: #fff;
-  padding: 5px 16px;
-  margin-right: 20px;
-  text-decoration: none;
-  display: block;
-  width: 160px;
-  cursor: pointer;
-  white-space: nowrap;
-}
-
-.dropdown__list {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-}
-
-.show {
-  display: block;
 }
 
 @media screen and (max-width: 1024px) {
