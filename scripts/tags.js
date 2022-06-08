@@ -1,4 +1,6 @@
-/* global generateTagElement */
+/* global DOMHandler */
+/* global SearchHandler */
+/* global getRecipes() */
 
 const dropdowns = document.querySelectorAll('[data-dropdown]');
 
@@ -45,15 +47,20 @@ dropdowns.forEach((dropdown) => {
   const dropdownOptions = dropdown.querySelectorAll('p');
   dropdownOptions.forEach((option) => {
     option.addEventListener('click', () => {
-      const tagSection = document.querySelector('.search__tags');
+      const tagSection = document.querySelector('[data-tags]');
       const { value, type } = option.dataset;
       const alreadySelected = tagSection.querySelector(
         `[data-value="${value}"]`
       );
       if (alreadySelected) return;
       closeDropdown(dropdown);
-      const newTag = generateTagElement(type, value);
+      const newTag = DOMHandler.generateTagElement(type, value);
       tagSection.appendChild(newTag);
+
+      const tags = tagSection.querySelectorAll('[data-type]');
+      const filteredTags = SearchHandler.filterByTags(getRecipes(), tags);
+      const tagElements = DOMHandler.generateCardsHTML(filteredTags);
+      DOMHandler.displayCards(tagElements);
     });
   });
 });

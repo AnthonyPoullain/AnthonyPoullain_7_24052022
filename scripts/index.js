@@ -64,6 +64,32 @@ const DOMHandler = {
     return itemElements;
   },
 
+  generateTagElement: (tagType, tagValue) => {
+    const tagTemplate = document.querySelector('[data-tag-template]');
+    const tagEl = tagTemplate.content.cloneNode(true).children[0];
+    const tag = tagEl.querySelector('[data-value]');
+
+    switch (tagType) {
+      case 'appliance':
+        tagEl.classList.add('btn--green');
+        break;
+      case 'ustensil':
+        tagEl.classList.add('btn--orange');
+        break;
+      default:
+        tagEl.classList.add('btn--blue');
+        break;
+    }
+    tag.dataset.type = tagType;
+    tag.dataset.value = tagValue;
+    tag.innerText = tagValue;
+
+    const closeBtn = tagEl.querySelector('[data-close]');
+    closeBtn.setAttribute('onclick', `removeTag('${tagValue}')`);
+
+    return tagEl;
+  },
+
   displayCards: (cards) => {
     const cardSection = document.querySelector('[data-cards]');
     cardSection.innerHTML = '';
@@ -82,28 +108,62 @@ const SearchHandler = {
     return input.toLowerCase().replace(/\s+/g, ' ').replace('.', '').trim();
   },
 
+  normalizeString: (str) => {
+    const capitalizedStr =
+      str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+    return capitalizedStr.replace(/\([^)]*\)/, '');
+  },
+
   filterResults: (stack, needle) => {
-    const filteredRecipes = stack.filter((recipe) => {
-      const sanitizedNeedle = SearchHandler.sanitize(needle);
-      if (BLACKLIST.includes(sanitizedNeedle)) return false;
+    const sanitizedNeedle = SearchHandler.sanitize(needle);
+    const searchWords = sanitizedNeedle
+      .split(' ')
+      .map((word) => word)
+      .filter((searchWord) => !BLACKLIST.includes(searchWord));
+    const filteredStack = stack.filter(
+      (recipe) =>
+        searchWords.some((word) =>
+          recipe.name.split(' ').includes(word.toLowerCase())
+        ) || recipe.name.toLowerCase().includes(sanitizedNeedle)
+    );
+    return filteredStack.length > 0 ? filteredStack : stack;
+  },
 
-      let criterias = [recipe.name];
-      if (SEARCH_INCLUDES.ingredients) criterias.push(recipe.ingredients);
-      if (SEARCH_INCLUDES.ustensils) criterias.push(recipe.ustensils);
-      if (SEARCH_INCLUDES.description) criterias.push(recipe.description);
-      criterias = criterias.toString().trim().toLowerCase();
+  filterByTags: (data, tags) => {
+    const filteredData = [...tags].map((tag) => {
+      const tagType = tag.dataset.type;
+      const tagValue = tag.dataset.value;
+      let result = [];
 
-      return criterias.includes(sanitizedNeedle);
+      switch (tagType) {
+        case 'ingredient':
+          result = data.filter((recipe) =>
+            recipe.ingredients
+              .map((ingredient) => ingredient.ingredient.toLowerCase())
+              .flat(Infinity)
+              .includes(tagValue.toLowerCase())
+          );
+          break;
+        case 'appliance':
+          result = data.filter((recipe) => recipe.appliance.includes(tagValue));
+          // filteredStack.push(data.filter());
+          break;
+
+        case 'ustensil':
+          result = data
+            .filter((recipe) => recipe.ustensils)
+            .flat()
+            .includes(tagValue);
+          break;
+        default:
+          console.error('Invalid tag type');
+          break;
+      }
+      return result;
     });
-    return filteredRecipes;
+    return [...new Set(filteredData.flat(Infinity))];
   },
 };
-
-function normalizeString(str) {
-  const capitalizedStr =
-    str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
-  return capitalizedStr.replace(/\([^)]*\)/, '');
-}
 
 function getRecipes() {
   return recipes;
@@ -113,8 +173,14 @@ function getIngredients(data) {
   const ingredientList = [];
   data.forEach((recipe) => {
     recipe.ingredients.forEach((ingredient) => {
-      if (!ingredientList.includes(normalizeString(ingredient.ingredient))) {
-        ingredientList.push(normalizeString(ingredient.ingredient));
+      if (
+        !ingredientList.includes(
+          SearchHandler.normalizeString(ingredient.ingredient)
+        )
+      ) {
+        ingredientList.push(
+          SearchHandler.normalizeString(ingredient.ingredient)
+        );
       }
     });
   });
@@ -123,7 +189,9 @@ function getIngredients(data) {
 
 function getAppliances(data) {
   const applianceList = [
-    ...new Set(data.map((item) => normalizeString(item.appliance))),
+    ...new Set(
+      data.map((item) => SearchHandler.normalizeString(item.appliance))
+    ),
   ];
   return applianceList;
 }
@@ -132,40 +200,14 @@ function getUstensils(data) {
   const ustensilsList = [];
   data.forEach((recipe) => {
     recipe.ustensils.forEach((ustensil) => {
-      ustensilsList.push(normalizeString(ustensil));
+      ustensilsList.push(SearchHandler.normalizeString(ustensil));
     });
   });
   return [...new Set(ustensilsList)];
 }
 
-function generateTagElement(tagType, tagValue) {
-  const tagTemplate = document.querySelector('[data-tag-template]');
-  const tagEl = tagTemplate.content.cloneNode(true).children[0];
-  const tag = tagEl.querySelector('[data-value]');
-
-  switch (tagType) {
-    case 'appliance':
-      tagEl.classList.add('btn--green');
-      break;
-    case 'ustensil':
-      tagEl.classList.add('btn--orange');
-      break;
-    default:
-      tagEl.classList.add('btn--blue');
-      break;
-  }
-  tag.dataset.type = tagType;
-  tag.dataset.value = tagValue;
-  tag.innerText = tagValue;
-
-  const closeBtn = tagEl.querySelector('[data-close]');
-  closeBtn.setAttribute('onclick', `removeTag('${tagValue}')`);
-
-  return tagEl;
-}
-
 function init() {
-  let data = getRecipes();
+  const data = getRecipes();
 
   // Display cards
   const cardElements = DOMHandler.generateCardsHTML(data);
@@ -199,17 +241,9 @@ function init() {
   const searchInput = document.querySelector('[data-search]');
   searchInput.addEventListener('input', (e) => {
     const { value } = e.target;
-    if (value && value.length > 0) {
-      value.split(' ').forEach((word) => {
-        if (BLACKLIST.includes(word)) return;
-        const filteredData = SearchHandler.filterResults(data, word);
-        const filteredCardElements = DOMHandler.generateCardsHTML(filteredData);
-        DOMHandler.displayCards(filteredCardElements);
-        data = filteredData;
-      });
-    } else {
-      DOMHandler.displayCards(cardElements);
-    }
+    const filteredData = SearchHandler.filterResults(data, value);
+    const filteredCardElements = DOMHandler.generateCardsHTML(filteredData);
+    DOMHandler.displayCards(filteredCardElements);
   });
 }
 
