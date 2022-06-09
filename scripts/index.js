@@ -59,7 +59,7 @@ const DOMHandler = {
   generateDropdownItems: (items, itemType) => {
     const itemElements = items.map(
       (item) =>
-        `<p data-type='${itemType}' data-value='${item}' tabindex="0">${item}</li>`
+        `<p data-type='${itemType}' data-value='${item}' tabindex="0">${item}</p>`
     );
     return itemElements;
   },
@@ -99,6 +99,8 @@ const DOMHandler = {
   },
 
   displayDropdownItems: (items, dropdownEl) => {
+    const listItems = dropdownEl.querySelectorAll('p');
+    listItems.forEach((item) => item.remove());
     items.forEach((item) => dropdownEl.insertAdjacentHTML('beforeend', item));
   },
 };
@@ -129,6 +131,21 @@ const SearchHandler = {
     return filteredStack.length > 0 ? filteredStack : stack;
   },
 
+  filterTags: (stack, needle) => {
+    const sanitizedNeedle = SearchHandler.sanitize(needle);
+    const searchWords = sanitizedNeedle
+      .split(' ')
+      .map((word) => word)
+      .filter((searchWord) => !BLACKLIST.includes(searchWord));
+    const filteredStack = stack.filter(
+      (tag) =>
+        searchWords.some((word) =>
+          tag.split(' ').includes(word.toLowerCase())
+        ) || tag.toLowerCase().includes(sanitizedNeedle)
+    );
+    return filteredStack;
+  },
+
   filterByTags: (data, tags) => {
     const filteredData = [...tags].map((tag) => {
       const tagType = tag.dataset.type;
@@ -145,15 +162,17 @@ const SearchHandler = {
           );
           break;
         case 'appliance':
-          result = data.filter((recipe) => recipe.appliance.includes(tagValue));
-          // filteredStack.push(data.filter());
+          result = data.filter((recipe) =>
+            recipe.appliance.toLowerCase().includes(tagValue.toLowerCase())
+          );
           break;
 
         case 'ustensil':
-          result = data
-            .filter((recipe) => recipe.ustensils)
-            .flat()
-            .includes(tagValue);
+          result = data.filter((recipe) =>
+            recipe.ustensils
+              .map((ustensil) => ustensil.toLowerCase())
+              .includes(tagValue.toLowerCase())
+          );
           break;
         default:
           console.error('Invalid tag type');
@@ -244,6 +263,34 @@ function init() {
     const filteredData = SearchHandler.filterResults(data, value);
     const filteredCardElements = DOMHandler.generateCardsHTML(filteredData);
     DOMHandler.displayCards(filteredCardElements);
+  });
+
+  const tagSearchInputs = document.querySelectorAll('[data-search-tags]');
+  [...tagSearchInputs].forEach((input) => {
+    input.addEventListener('input', (e) => {
+      const { value } = e.target;
+      const inputCategory = e.target.dataset.searchTags;
+      let tags;
+      switch (inputCategory) {
+        case 'ingredient':
+          tags = getIngredients(data);
+          break;
+        case 'appliance':
+          tags = getAppliances(data);
+          break;
+        case 'ustensil':
+          tags = getUstensils(data);
+          break;
+        default:
+          console.error('Dropdown error: invalid category');
+      }
+      const filteredTags = SearchHandler.filterTags(tags, value);
+      const filteredTagElements = DOMHandler.generateDropdownItems(
+        filteredTags,
+        inputCategory
+      );
+      DOMHandler.displayDropdownItems(filteredTagElements, input.parentNode);
+    });
   });
 }
 

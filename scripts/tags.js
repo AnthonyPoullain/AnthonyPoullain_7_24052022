@@ -44,11 +44,13 @@ dropdowns.forEach((dropdown) => {
     e.stopPropagation();
   });
 
-  const dropdownOptions = dropdown.querySelectorAll('p');
-  dropdownOptions.forEach((option) => {
-    option.addEventListener('click', () => {
+  const dropdownList = dropdown.querySelector('[data-list]');
+  dropdownList.addEventListener('click', (e) => {
+    const listItem = e.target;
+    const isListItem = listItem.nodeName === 'P';
+    if (isListItem) {
       const tagSection = document.querySelector('[data-tags]');
-      const { value, type } = option.dataset;
+      const { value, type } = listItem.dataset;
       const alreadySelected = tagSection.querySelector(
         `[data-value="${value}"]`
       );
@@ -58,9 +60,9 @@ dropdowns.forEach((dropdown) => {
       tagSection.appendChild(newTag);
 
       const tags = tagSection.querySelectorAll('[data-type]');
-      const filteredTags = SearchHandler.filterByTags(getRecipes(), tags);
-      const tagElements = DOMHandler.generateCardsHTML(filteredTags);
-      DOMHandler.displayCards(tagElements);
-    });
+      const filteredRecipes = SearchHandler.filterByTags(getRecipes(), tags);
+      const recipeCards = DOMHandler.generateCardsHTML(filteredRecipes);
+      DOMHandler.displayCards(recipeCards);
+    }
   });
 });
