@@ -116,34 +116,19 @@ const SearchHandler = {
     return capitalizedStr.replace(/\([^)]*\)/, '');
   },
 
-  filterResults: (stack, needle) => {
+  filterBySearch: (stack, needle) => {
     const sanitizedNeedle = SearchHandler.sanitize(needle);
     const searchWords = sanitizedNeedle
       .split(' ')
-      .map((word) => word)
-      .filter((searchWord) => !BLACKLIST.includes(searchWord));
-    const filteredStack = stack.filter(
-      (recipe) =>
-        searchWords.some((word) =>
-          recipe.name.split(' ').includes(word.toLowerCase())
-        ) || recipe.name.toLowerCase().includes(sanitizedNeedle)
-    );
-    return filteredStack.length > 0 ? filteredStack : stack;
-  },
-
-  filterTags: (stack, needle) => {
-    const sanitizedNeedle = SearchHandler.sanitize(needle);
-    const searchWords = sanitizedNeedle
-      .split(' ')
-      .map((word) => word)
-      .filter((searchWord) => !BLACKLIST.includes(searchWord));
-    const filteredStack = stack.filter(
-      (tag) =>
-        searchWords.some((word) =>
-          tag.split(' ').includes(word.toLowerCase())
-        ) || tag.toLowerCase().includes(sanitizedNeedle)
-    );
-    return filteredStack;
+      .filter((word) => !BLACKLIST.includes(word));
+    let results = stack;
+    searchWords.forEach((searchWord) => {
+      results = results.filter((item) => {
+        const element = item.name ? item.name : item;
+        return element.toLowerCase().includes(searchWord);
+      });
+    });
+    return results;
   },
 
   filterByTags: (data, tags) => {
@@ -166,7 +151,6 @@ const SearchHandler = {
             recipe.appliance.toLowerCase().includes(tagValue.toLowerCase())
           );
           break;
-
         case 'ustensil':
           result = data.filter((recipe) =>
             recipe.ustensils
@@ -203,7 +187,7 @@ function getIngredients(data) {
       }
     });
   });
-  return ingredientList;
+  return { list: ingredientList, type: 'ingredient' };
 }
 
 function getAppliances(data) {
@@ -212,7 +196,7 @@ function getAppliances(data) {
       data.map((item) => SearchHandler.normalizeString(item.appliance))
     ),
   ];
-  return applianceList;
+  return { list: applianceList, type: 'appliance' };
 }
 
 function getUstensils(data) {
@@ -222,69 +206,90 @@ function getUstensils(data) {
       ustensilsList.push(SearchHandler.normalizeString(ustensil));
     });
   });
-  return [...new Set(ustensilsList)];
+  return { list: [...new Set(ustensilsList)], type: 'ustensil' };
 }
 
-function init() {
+function refreshResults() {
   const data = getRecipes();
+  const tagSection = document.querySelector('[data-tags]');
+  let results = data;
+
+  if (tagSection.children.length > 0) {
+    const ingredients = tagSection.querySelectorAll('[data-type="ingredient"]');
+    const appliances = tagSection.querySelectorAll('[data-type="appliance"]');
+    const ustensils = tagSection.querySelectorAll('[data-type="ustensil"]');
+    const tags = [ingredients, appliances, ustensils];
+
+    tags.forEach((tag) => {
+      if (tag.length) {
+        results = SearchHandler.filterByTags(results, tag);
+      }
+    });
+  }
+
+  const searchBar = document.querySelector('[data-search]');
+  const { value } = searchBar;
+  if (value) {
+    results = SearchHandler.filterBySearch(results, value);
+  }
+
+  // const filteredCardElements = DOMHandler.generateCardsHTML(results);
+  // DOMHandler.displayCards(filteredCardElements);
+
+  return results;
+}
+
+(function init() {
+  const data = getRecipes();
+
+  const ingredients = getIngredients(data);
+  const appliances = getAppliances(data);
+  const ustensils = getUstensils(data);
+  const categories = [ingredients, appliances, ustensils];
+
+  // Generate dropdown list items
+  const dropdownLists = document.querySelectorAll('[data-list]');
+  categories.forEach((category, i) => {
+    const elements = DOMHandler.generateDropdownItems(
+      category.list,
+      category.type
+    );
+    DOMHandler.displayDropdownItems(elements, dropdownLists[i]);
+  });
 
   // Display cards
   const cardElements = DOMHandler.generateCardsHTML(data);
   DOMHandler.displayCards(cardElements);
 
-  // Generate dropdown list items
-  const dropdownLists = document.querySelectorAll('[data-list]');
-
-  const ingredients = getIngredients(data);
-  const ingredientsElements = DOMHandler.generateDropdownItems(
-    ingredients,
-    'ingredient'
-  );
-  DOMHandler.displayDropdownItems(ingredientsElements, dropdownLists[0]);
-
-  const appliances = getAppliances(data);
-  const appliancesElements = DOMHandler.generateDropdownItems(
-    appliances,
-    'appliance'
-  );
-  DOMHandler.displayDropdownItems(appliancesElements, dropdownLists[1]);
-
-  const ustensils = getUstensils(data);
-  const ustensilsElements = DOMHandler.generateDropdownItems(
-    ustensils,
-    'ustensil'
-  );
-  DOMHandler.displayDropdownItems(ustensilsElements, dropdownLists[2]);
-
   // Listen for search
   const searchInput = document.querySelector('[data-search]');
-  searchInput.addEventListener('input', (e) => {
-    const { value } = e.target;
-    const filteredData = SearchHandler.filterResults(data, value);
+  searchInput.addEventListener('input', () => {
+    const filteredData = refreshResults();
     const filteredCardElements = DOMHandler.generateCardsHTML(filteredData);
     DOMHandler.displayCards(filteredCardElements);
   });
 
+  // Listen for search in tag dropdowns
   const tagSearchInputs = document.querySelectorAll('[data-search-tags]');
-  [...tagSearchInputs].forEach((input) => {
+  tagSearchInputs.forEach((input) => {
     input.addEventListener('input', (e) => {
       const { value } = e.target;
       const inputCategory = e.target.dataset.searchTags;
       let tags;
       switch (inputCategory) {
         case 'ingredient':
-          tags = getIngredients(data);
+          tags = getIngredients(data).list;
           break;
         case 'appliance':
-          tags = getAppliances(data);
+          tags = getAppliances(data).list;
           break;
         case 'ustensil':
-          tags = getUstensils(data);
+          tags = getUstensils(data).list;
           break;
         default:
           console.error('Dropdown error: invalid category');
       }
-      const filteredTags = SearchHandler.filterTags(tags, value);
+      const filteredTags = SearchHandler.filterBySearch(tags, value);
       const filteredTagElements = DOMHandler.generateDropdownItems(
         filteredTags,
         inputCategory
@@ -292,6 +297,4 @@ function init() {
       DOMHandler.displayDropdownItems(filteredTagElements, input.parentNode);
     });
   });
-}
-
-init();
+})();

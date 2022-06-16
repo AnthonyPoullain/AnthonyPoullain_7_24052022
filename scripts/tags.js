@@ -1,6 +1,6 @@
 /* global DOMHandler */
 /* global SearchHandler */
-/* global getRecipes() */
+/* global refreshResults */
 
 const dropdowns = document.querySelectorAll('[data-dropdown]');
 
@@ -24,6 +24,10 @@ function removeTag(tagValue) {
     `.search__tags [data-value="${tagValue}"]`
   ).parentNode;
   tag.remove();
+  // .closest()
+  const filteredRecipes = refreshResults();
+  const recipeCards = DOMHandler.generateCardsHTML(filteredRecipes);
+  DOMHandler.displayCards(recipeCards);
 }
 
 ['click', 'keydown'].forEach((evtType) => {
@@ -59,8 +63,7 @@ dropdowns.forEach((dropdown) => {
       const newTag = DOMHandler.generateTagElement(type, value);
       tagSection.appendChild(newTag);
 
-      const tags = tagSection.querySelectorAll('[data-type]');
-      const filteredRecipes = SearchHandler.filterByTags(getRecipes(), tags);
+      const filteredRecipes = refreshResults();
       const recipeCards = DOMHandler.generateCardsHTML(filteredRecipes);
       DOMHandler.displayCards(recipeCards);
     }
