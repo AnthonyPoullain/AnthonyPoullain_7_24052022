@@ -26,7 +26,7 @@ const BLACKLIST = [
 ];
 
 const DOMHandler = {
-  generateCardsHTML: (recipesData) => {
+  createRecipeCards: (recipesData) => {
     const cardElements = recipesData.map((recipe) => {
       // DOM Elements
       const cardTemplate = document.querySelector(
@@ -56,7 +56,7 @@ const DOMHandler = {
     return cardElements;
   },
 
-  generateDropdownItems: (items, itemType) => {
+  createDropdownItems: (items, itemType) => {
     const itemElements = items.map(
       (item) =>
         `<p data-type='${itemType}' data-value='${item}' tabindex="0">${item}</p>`
@@ -64,7 +64,7 @@ const DOMHandler = {
     return itemElements;
   },
 
-  generateTagElement: (tagType, tagValue) => {
+  createTagElement: (tagType, tagValue) => {
     const tagTemplate = document.querySelector('[data-tag-template]');
     const tagEl = tagTemplate.content.cloneNode(true).children[0];
     const tag = tagEl.querySelector('[data-value]');
@@ -86,7 +86,6 @@ const DOMHandler = {
 
     const closeBtn = tagEl.querySelector('[data-close]');
     closeBtn.setAttribute('onclick', `removeTag('${tagValue}')`);
-
     return tagEl;
   },
 
@@ -124,7 +123,7 @@ const SearchHandler = {
     let results = stack;
     searchWords.forEach((searchWord) => {
       results = results.filter((item) => {
-        const element = item.name ? item.name : item;
+        const element = item.name || item;
         return element.toLowerCase().includes(searchWord);
       });
     });
@@ -209,7 +208,7 @@ function getUstensils(data) {
   return { list: [...new Set(ustensilsList)], type: 'ustensil' };
 }
 
-function refreshResults() {
+function filterResults() {
   const data = getRecipes();
   const tagSection = document.querySelector('[data-tags]');
   let results = data;
@@ -221,25 +220,24 @@ function refreshResults() {
     const tags = [ingredients, appliances, ustensils];
 
     tags.forEach((tag) => {
-      if (tag.length) {
-        results = SearchHandler.filterByTags(results, tag);
-      }
+      if (tag.length) results = SearchHandler.filterByTags(results, tag);
     });
   }
-
   const searchBar = document.querySelector('[data-search]');
   const { value } = searchBar;
-  if (value) {
+  if (value.length) {
     results = SearchHandler.filterBySearch(results, value);
   }
-
-  // const filteredCardElements = DOMHandler.generateCardsHTML(results);
-  // DOMHandler.displayCards(filteredCardElements);
-
   return results;
 }
 
-(function init() {
+function refreshResults() {
+  const results = filterResults();
+  const filteredCardElements = DOMHandler.createRecipeCards(results);
+  DOMHandler.displayCards(filteredCardElements);
+}
+
+function init() {
   const data = getRecipes();
 
   const ingredients = getIngredients(data);
@@ -247,10 +245,10 @@ function refreshResults() {
   const ustensils = getUstensils(data);
   const categories = [ingredients, appliances, ustensils];
 
-  // Generate dropdown list items
+  // create dropdown list items
   const dropdownLists = document.querySelectorAll('[data-list]');
   categories.forEach((category, i) => {
-    const elements = DOMHandler.generateDropdownItems(
+    const elements = DOMHandler.createDropdownItems(
       category.list,
       category.type
     );
@@ -258,15 +256,13 @@ function refreshResults() {
   });
 
   // Display cards
-  const cardElements = DOMHandler.generateCardsHTML(data);
+  const cardElements = DOMHandler.createRecipeCards(data);
   DOMHandler.displayCards(cardElements);
 
   // Listen for search
   const searchInput = document.querySelector('[data-search]');
   searchInput.addEventListener('input', () => {
-    const filteredData = refreshResults();
-    const filteredCardElements = DOMHandler.generateCardsHTML(filteredData);
-    DOMHandler.displayCards(filteredCardElements);
+    refreshResults();
   });
 
   // Listen for search in tag dropdowns
@@ -290,11 +286,13 @@ function refreshResults() {
           console.error('Dropdown error: invalid category');
       }
       const filteredTags = SearchHandler.filterBySearch(tags, value);
-      const filteredTagElements = DOMHandler.generateDropdownItems(
+      const filteredTagElements = DOMHandler.createDropdownItems(
         filteredTags,
         inputCategory
       );
       DOMHandler.displayDropdownItems(filteredTagElements, input.parentNode);
     });
   });
-})();
+}
+
+init();

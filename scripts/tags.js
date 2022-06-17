@@ -25,9 +25,7 @@ function removeTag(tagValue) {
   ).parentNode;
   tag.remove();
   // .closest()
-  const filteredRecipes = refreshResults();
-  const recipeCards = DOMHandler.generateCardsHTML(filteredRecipes);
-  DOMHandler.displayCards(recipeCards);
+  refreshResults();
 }
 
 ['click', 'keydown'].forEach((evtType) => {
@@ -60,12 +58,9 @@ dropdowns.forEach((dropdown) => {
       );
       if (alreadySelected) return;
       closeDropdown(dropdown);
-      const newTag = DOMHandler.generateTagElement(type, value);
+      const newTag = DOMHandler.createTagElement(type, value);
       tagSection.appendChild(newTag);
-
-      const filteredRecipes = refreshResults();
-      const recipeCards = DOMHandler.generateCardsHTML(filteredRecipes);
-      DOMHandler.displayCards(recipeCards);
+      refreshResults();
     }
   });
 });
