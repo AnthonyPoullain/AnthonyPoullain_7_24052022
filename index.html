@@ -1,127 +1,134 @@
 <!DOCTYPE html>
 <html lang="fr">
-  <head>
-    <title>Les petits plats</title>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link href="css/style.css" rel="stylesheet" />
-    <script
-      src="https://kit.fontawesome.com/8337497683.js"
-      crossorigin="anonymous"
-    ></script>
-    <script src="scripts/recipes.js"></script>
-    <script src="scripts/index.js" defer></script>
-    <script src="scripts/tags.js" defer></script>
-  </head>
+    <head>
+        <title>Les petits plats</title>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link href="css/style.css" rel="stylesheet" />
+        <script
+            src="https://kit.fontawesome.com/8337497683.js"
+            crossorigin="anonymous"
+        ></script>
+        <script src="scripts/recipesData.js"></script>
+        <script src="scripts/recipe.js"></script>
 
-  <body>
-    <header class="header container">
-      <a href="index.html">
-        <img
-          src="assets/images/logo.svg"
-          alt="Homepage Logo"
-          class="header__logo"
-        />
-      </a>
-    </header>
-    <main class="container">
-      <div class="search">
-        <div class="search__bar-wrapper">
-          <input
-            type="search"
-            placeholder="Rechercher une recette..."
-            class="search__bar"
-            data-search
-          />
-          <i class="fa-solid fa-magnifying-glass"></i>
-        </div>
-        <div class="search__tags" data-tags></div>
-        <div class="search__buttons">
-          <div class="dropdown" data-dropdown>
-            <button class="btn btn--blue">
-              Ingredients
-              <i class="fa-solid fa-angle-up"></i>
-            </button>
-            <div class="dropdown__content btn--blue" data-content>
-              <div class="dropdown__list" data-list>
-                <input
-                  data-search-tags="ingredient"
-                  type="search"
-                  class="dropdown__input"
-                  placeholder="Rechercher un ingrédient..."
-                />
-                <i class="fa-solid fa-angle-down"></i>
-              </div>
-            </div>
-          </div>
+        <script src="scripts/dropdowns.js" defer></script>
+        <script src="scripts/tag.js" defer></script>
+        <script src="scripts/index.js" defer></script>
+    </head>
 
-          <div class="dropdown" data-dropdown>
-            <button class="btn btn--green">
-              Appareils
-              <i class="fa-solid fa-angle-up"></i>
-            </button>
-            <div class="dropdown__content btn--green" data-content>
-              <div class="dropdown__list" data-list>
-                <input
-                  data-search-tags="appliance"
-                  type="search"
-                  class="dropdown__input"
-                  placeholder="Rechercher un appareil..."
+    <body>
+        <header class="header container">
+            <a href="index.html">
+                <img
+                    src="assets/images/logo.svg"
+                    alt="Homepage Logo"
+                    class="header__logo"
                 />
-                <i class="fa-solid fa-angle-down"></i>
-              </div>
-            </div>
-          </div>
+            </a>
+        </header>
+        <main class="container">
+            <div class="search">
+                <div class="search__bar-wrapper">
+                    <input
+                        type="search"
+                        placeholder="Rechercher une recette..."
+                        class="search__bar"
+                        data-search
+                    />
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </div>
+                <div class="search__tags" data-tags></div>
+                <div class="search__buttons">
+                    <div class="dropdown" data-dropdown>
+                        <button class="btn btn--blue">
+                            Ingredients
+                            <i class="fa-solid fa-angle-up"></i>
+                        </button>
+                        <div class="dropdown__content btn--blue" data-content>
+                            <div class="dropdown__list" data-list>
+                                <input
+                                    data-search-tags="ingredient"
+                                    type="search"
+                                    class="dropdown__input"
+                                    placeholder="Rechercher un ingrédient..."
+                                />
+                                <i class="fa-solid fa-angle-down"></i>
+                            </div>
+                        </div>
+                    </div>
 
-          <div class="dropdown" data-dropdown>
-            <button class="btn btn--orange">
-              Ustensiles
-              <i class="fa-solid fa-angle-up"></i>
-            </button>
-            <div class="dropdown__content btn--orange" data-content>
-              <div class="dropdown__list" data-list>
-                <input
-                  data-search-tags="ustensil"
-                  type="search"
-                  class="dropdown__input"
-                  placeholder="Rechercher un ustensile..."
-                />
-                <i class="fa-solid fa-angle-down"></i>
-              </div>
+                    <div class="dropdown" data-dropdown>
+                        <button class="btn btn--green">
+                            Appareils
+                            <i class="fa-solid fa-angle-up"></i>
+                        </button>
+                        <div class="dropdown__content btn--green" data-content>
+                            <div class="dropdown__list" data-list>
+                                <input
+                                    data-search-tags="appliance"
+                                    type="search"
+                                    class="dropdown__input"
+                                    placeholder="Rechercher un appareil..."
+                                />
+                                <i class="fa-solid fa-angle-down"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="dropdown" data-dropdown>
+                        <button class="btn btn--orange">
+                            Ustensiles
+                            <i class="fa-solid fa-angle-up"></i>
+                        </button>
+                        <div class="dropdown__content btn--orange" data-content>
+                            <div class="dropdown__list" data-list>
+                                <input
+                                    data-search-tags="ustensil"
+                                    type="search"
+                                    class="dropdown__input"
+                                    placeholder="Rechercher un ustensile..."
+                                />
+                                <i class="fa-solid fa-angle-down"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-          </div>
-        </div>
-      </div>
-      <section class="cards" data-cards></section>
-    </main>
-    <template data-recipe-card-template>
-      <article class="card">
-        <div class="card__header"></div>
-        <div class="card__body">
-          <div class="card__heading">
-            <h3 class="card__title">
-              <a href="" data-title></a>
-            </h3>
-            <span class="card__time"
-              ><i class="fa-regular fa-clock"></i><span data-time></span
-            ></span>
-          </div>
-          <div class="card__description">
-            <ul class="card__ingredients" data-ingredients></ul>
-            <div class="card__preview-text" data-description>
-              <p></p>
+            <section class="cards" data-cards></section>
+        </main>
+        <template data-recipe-card-template>
+            <article class="card">
+                <div class="card__header"></div>
+                <div class="card__body">
+                    <div class="card__heading">
+                        <h3 class="card__title">
+                            <a href="" data-title></a>
+                        </h3>
+                        <span class="card__time"
+                            ><i class="fa-regular fa-clock"></i
+                            ><span data-time></span
+                        ></span>
+                    </div>
+                    <div class="card__description">
+                        <ul class="card__ingredients" data-ingredients></ul>
+                        <div class="card__preview-text" data-description>
+                            <p></p>
+                        </div>
+                    </div>
+                </div>
+            </article>
+        </template>
+        <template data-tag-template>
+            <div class="tag">
+                <span data-id data-type data-value></span>
+                <button class="tag__close" data-close>
+                    <i class="fa-regular fa-circle-xmark"></i>
+                </button>
             </div>
-          </div>
-        </div>
-      </article>
-    </template>
-    <template data-tag-template>
-      <div class="tag">
-        <span data-type data-value></span>
-        <button class="tag__close" data-close>
-          <i class="fa-regular fa-circle-xmark"></i>
-        </button>
-      </div>
-    </template>
-  </body>
+        </template>
+        <template data-dropdown-item-template>
+            <p data-id data-type data-value tabindex="0"></p>
+        </template>
+    </body>
 </html>
