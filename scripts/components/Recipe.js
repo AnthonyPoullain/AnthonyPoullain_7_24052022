@@ -15,9 +15,11 @@ class Recipe {
     }
 
     getIngredientList() {
-        return this.ingredients.map((ingredient) =>
-            this.normalizeString(ingredient.ingredient)
-        );
+        return [
+            ...this.ingredients.map((ingredient) =>
+                this.normalizeString(ingredient.ingredient)
+            ),
+        ];
     }
 
     // eslint-disable-next-line class-methods-use-this

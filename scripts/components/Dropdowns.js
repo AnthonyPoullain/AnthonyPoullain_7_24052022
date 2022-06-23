@@ -55,14 +55,14 @@ dropdowns.forEach((dropdown) => {
         const isListItem = listItem.nodeName === 'P';
         if (isListItem) {
             const { value, type } = listItem.dataset;
-            const alreadySelected = document.querySelector(
+            const isAlreadySelected = document.querySelector(
                 `[data-tags] [data-value="${value}"]`
             );
-            if (alreadySelected) return;
+            if (isAlreadySelected) return;
             closeDropdown(dropdown);
             DOMHandler.displayTag(value, type);
             toggleStrikeThrough(listItem);
-            refreshResults();
+            DOMHandler.refreshResults();
         }
     });
 });
