@@ -26,11 +26,7 @@ function getUstensils(data) {
 
 function init() {
     const data = getRecipes().map((item) => new Recipe(item));
-
-    // Display dropdown items
     DOMHandler.refreshDropdownItems(data);
-
-    // Display cards
     DOMHandler.displayRecipeCards(data);
 
     // Listen for search
@@ -46,16 +42,16 @@ function init() {
             const { value } = e.target;
             const inputCategory = e.target.dataset.searchTags;
             let tags;
-            const currentData = SearchHandler.filterResults();
+            const displayedData = SearchHandler.filterResults();
             switch (inputCategory) {
                 case 'ingredient':
-                    tags = getIngredients(currentData).list;
+                    tags = getIngredients(displayedData).list;
                     break;
                 case 'appliance':
-                    tags = getAppliances(currentData).list;
+                    tags = getAppliances(displayedData).list;
                     break;
                 case 'ustensil':
-                    tags = getUstensils(currentData).list;
+                    tags = getUstensils(displayedData).list;
                     break;
                 default:
                     console.error('Dropdown error: invalid category');

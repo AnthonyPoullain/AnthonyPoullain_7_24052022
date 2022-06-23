@@ -6,8 +6,8 @@ const dropdowns = document.querySelectorAll('[data-dropdown]');
 
 function closeAllDropdowns() {
     dropdowns.forEach((d) => {
-        // const input = d.querySelector('input');
-        // input.value = '';
+        const input = d.querySelector('input');
+        input.value = '';
         d.querySelector('[data-content]').classList.remove('show');
         d.querySelector('button').classList.remove('hide');
     });
