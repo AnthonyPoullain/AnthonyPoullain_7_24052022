@@ -136,5 +136,24 @@
         <template data-dropdown-item-template>
             <p data-id data-type data-value tabindex="0"></p>
         </template>
+        <template data-dropdown-template>
+            <div class="dropdown" data-dropdown>
+                <button class="btn btn--orange">
+                    Ustensiles
+                    <i class="fa-solid fa-angle-up"></i>
+                </button>
+                <div class="dropdown__content btn--orange" data-content>
+                    <div class="dropdown__list" data-list>
+                        <input
+                            data-search-tags="ustensil"
+                            type="search"
+                            class="dropdown__input"
+                            placeholder="Rechercher un ustensile..."
+                        />
+                        <i class="fa-solid fa-angle-down"></i>
+                    </div>
+                </div>
+            </div>
+        </template>
     </body>
 </html>

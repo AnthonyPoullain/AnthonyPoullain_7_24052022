@@ -9,7 +9,7 @@ class Recipe {
         this.ingredientList = this.getIngredientList();
         this.appliance = recipeData.appliance;
         this.ustensils = recipeData.ustensils.map((ustensil) =>
-            this.normalizeString(ustensil)
+            Recipe.normalizeString(ustensil)
         );
         this.HTML = this.createCard();
     }
@@ -17,13 +17,12 @@ class Recipe {
     getIngredientList() {
         return [
             ...this.ingredients.map((ingredient) =>
-                this.normalizeString(ingredient.ingredient)
+                Recipe.normalizeString(ingredient.ingredient)
             ),
         ];
     }
 
-    // eslint-disable-next-line class-methods-use-this
-    normalizeString(str) {
+    static normalizeString(str) {
         const capitalizedStr =
             str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
         return capitalizedStr.replace(/\([^)]*\)/, '').trim();
