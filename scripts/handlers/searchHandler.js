@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-syntax */
 /* gobal Recipe */
 /* gobal getRecipes */
 
@@ -30,19 +31,40 @@ const SearchHandler = {
         return capitalizedStr.replace(/\([^)]*\)/, '');
     },
 
+    filterBlacklistedWords: (searchWords) => {
+        const filteredWords = [];
+        for (const word of searchWords) {
+            let isBlacklisted = false;
+            for (const blacklistedWord of BLACKLIST) {
+                if (word === blacklistedWord) isBlacklisted = true;
+            }
+            if (!isBlacklisted) filteredWords.push(word);
+        }
+        return filteredWords;
+    },
+
+    filterByWord: (stack, word) => {
+        const results = [];
+        for (const item of stack) {
+            const element =
+                item.name + item.ingredientList + item.description || item;
+            const matchFound = element
+                .toLowerCase()
+                .includes(word.toLowerCase());
+            if (matchFound) results.push(item);
+        }
+        return results;
+    },
+
     filterBySearch: (stack, needle) => {
         const sanitizedNeedle = SearchHandler.sanitize(needle);
-        const searchWords = sanitizedNeedle
-            .split(' ')
-            .filter((word) => !BLACKLIST.includes(word));
+        let searchWords = sanitizedNeedle.split(' ');
+        searchWords = SearchHandler.filterBlacklistedWords(searchWords);
         let results = stack;
-        searchWords.forEach((searchWord) => {
-            results = results.filter((item) => {
-                const element =
-                    item.name + item.ingredientList + item.description || item;
-                return element.toLowerCase().includes(searchWord);
-            });
-        });
+
+        for (const word of searchWords) {
+            results = SearchHandler.filterByWord(results, word);
+        }
         return results;
     },
 
