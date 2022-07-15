@@ -45,7 +45,8 @@ class Tag {
         // handleStrikethrough
         const selectedTags = document.querySelectorAll('[data-tags] [data-id]');
         const ids = [...selectedTags].map((tag) => tag.dataset.id);
-        if (ids.includes(this.id.toString())) toggleStrikeThrough(item);
+        const isAlreadySelected = ids.includes(this.id.toString());
+        if (isAlreadySelected) toggleStrikeThrough(item);
 
         return item;
     }
