@@ -24,12 +24,6 @@ const SearchHandler = {
         return input.toLowerCase().replace(/\s+/g, ' ').replace('.', '').trim();
     },
 
-    normalizeString: (str) => {
-        const capitalizedStr =
-            str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
-        return capitalizedStr.replace(/\([^)]*\)/, '');
-    },
-
     filterBySearch: (stack, needle) => {
         const sanitizedNeedle = SearchHandler.sanitize(needle);
         const searchWords = sanitizedNeedle
