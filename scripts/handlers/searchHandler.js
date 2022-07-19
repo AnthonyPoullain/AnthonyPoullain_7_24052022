@@ -89,7 +89,7 @@ const SearchHandler = {
 
         const searchBar = document.querySelector('[data-search]');
         const { value } = searchBar;
-        const inputHasValue = value.length > 3;
+        const inputHasValue = value.length > 2;
 
         if (inputHasValue)
             results = SearchHandler.filterBySearch(results, value);
