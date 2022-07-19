@@ -25,12 +25,6 @@ const SearchHandler = {
         return input.toLowerCase().replace(/\s+/g, ' ').replace('.', '').trim();
     },
 
-    normalizeString: (str) => {
-        const capitalizedStr =
-            str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
-        return capitalizedStr.replace(/\([^)]*\)/, '');
-    },
-
     filterBlacklistedWords: (searchWords) => {
         const filteredWords = [];
         for (const word of searchWords) {
@@ -117,7 +111,7 @@ const SearchHandler = {
 
         const searchBar = document.querySelector('[data-search]');
         const { value } = searchBar;
-        const inputHasValue = value.length > 3;
+        const inputHasValue = value.length > 2;
 
         if (inputHasValue)
             results = SearchHandler.filterBySearch(results, value);

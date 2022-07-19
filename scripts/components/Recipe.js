@@ -7,7 +7,7 @@ class Recipe {
         this.description = recipeData.description;
         this.ingredients = recipeData.ingredients;
         this.ingredientList = this.getIngredientList();
-        this.appliance = recipeData.appliance;
+        this.appliance = Recipe.normalizeString(recipeData.appliance);
         this.ustensils = recipeData.ustensils.map((ustensil) =>
             Recipe.normalizeString(ustensil)
         );
