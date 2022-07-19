@@ -36,7 +36,8 @@ function closeDropdown(dropdownElement) {
 function toggleStrikeThrough(element) {
     return element.hasAttribute('style')
         ? element.removeAttribute('style')
-        : element.setAttribute('style', 'text-decoration: line-through;');
+        : // : element.setAttribute('style', 'text-decoration: line-through;');
+          element.setAttribute('style', 'display: none;');
 }
 
 dropdowns.forEach((dropdown) => {
